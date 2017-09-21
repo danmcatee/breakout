@@ -29,15 +29,6 @@ var score = 0;
 var rightPressed = false;
 var leftPressed = false;
 
-// Generate Bricks
-var bricks = [];
-for (c = 0; c < brickColCount; c++) {
-  bricks[c] = [];
-  for (r = 0; r < brickRowCount; r++) {
-    bricks[c][r] = {x: 0, y: 0, status: 1};
-  }
-}
-
 // Listen for keystrokes
 document.addEventListener('keydown', keyDownHandler);
 document.addEventListener('keyup', keyUpHandler);
@@ -59,7 +50,16 @@ function keyUpHandler(e) {
   }
 }
 
-// Draw bricks to canvas
+// Generate Bricks
+var bricks = [];
+for (c = 0; c < brickColCount; c++) {
+  bricks[c] = [];
+  for (r = 0; r < brickRowCount; r++) {
+    bricks[c][r] = { x: 0, y: 0, status: 1 };
+  }
+}
+
+// Postion bricks
 function drawBricks() {
   for (c = 0; c < brickColCount; c++) {
     for (r = 0; r < brickRowCount; r++) {
@@ -73,31 +73,6 @@ function drawBricks() {
         ctx.fillStyle = '#0095DD';
         ctx.fill();
         ctx.closePath();
-      }
-    }
-  }
-}
-
-// Detecct collision to bounce ball off walls and bricks
-function collisionDetection() {
-  for (c = 0; c < brickColCount; c++) {
-    for (r = 0; r < brickRowCount; r++) {
-      var b = bricks[c][r];
-      if (b.status == 1) {
-        if (
-          x > b.x &&
-          x < b.x + brickWidth &&
-          y > b.y &&
-          y < b.y + brickHeight
-        ) {
-          dy = -dy;
-          b.status = 0;
-          score++;
-          if (score == brickColCount * brickRowCount) {
-            alert('YOU WIN');
-            document.location.reload();
-          }
-        }
       }
     }
   }
@@ -126,6 +101,26 @@ function drawScore() {
   ctx.font = '16px Arial';
   ctx.fillStyle = '#0095DD';
   ctx.fillText('Score: ' + score, 8, 20);
+}
+
+// Detecct collision to bounce ball off walls and bricks
+function collisionDetection() {
+  for (c = 0; c < brickColCount; c++) {
+    for (r = 0; r < brickRowCount; r++) {
+      var b = bricks[c][r];
+      if (b.status == 1) {
+        if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+          dy = -dy;
+          b.status = 0;
+          score++;
+          if (score == brickColCount * brickRowCount) {
+            alert('YOU WIN');
+            document.location.reload();
+          }
+        }
+      }
+    }
+  }
 }
 
 // Combine generators and draw to canvas
